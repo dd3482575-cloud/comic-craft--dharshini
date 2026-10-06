@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ComicCraft - Your Comic Preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 20px; font-family: Arial, Helvetica, sans-serif; background: #f0f0f0; color: #222; }
+    h1 { text-align: center; color: #444; }
+    .panel {
+      max-width: 940px; margin: 0 auto 24px; padding: 20px 14px 18px;
+      background: #fff; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    }
+    .panel h2 { margin: 0 0 14px; font-size: 1.3rem; color: #000; }
+    .panel img { display: block; width: 100%; max-width: 480px; height: auto; border-radius: 8px; }
+    .scene { margin: 10px 0; font-style: italic; color: #555; }
+    .story { margin: 12px 0 8px; white-space: pre-wrap; line-height: 1.55; }
+    .prompt-ref { margin-top: 10px; font-size: 0.8rem; color: #888; }
+    .actions { text-align: center; margin: 30px 0 40px; }
+    .btn {
+      display: inline-block; padding: 12px 22px; font-size: 1rem; font-weight: bold; color: #fff;
+      background: #0066cc; border-radius: 6px; text-decoration: none; transition: background .2s;
+    }
+    .btn:hover { background: #004c99; }
+    .btn.secondary { background: #6c757d; margin-left: 10px; font-weight: normal; }
+    .btn.secondary:hover { background: #545b62; }
+  </style>
+</head>
+<body>
+  <h1>📖 Your Comic Preview</h1>
+
+  {% for panel in layout %}
+  <div class="panel">
+    <h2>Panel {{ panel.panel }}: {{ panel.title }}</h2>
+    <img src="{{ panel.image_url }}" alt="Illustration for panel {{ panel.panel }}: {{ panel.title }}">
+    {% if panel.scene_description %}<p class="scene">{{ panel.scene_description }}</p>{% endif %}
+    <div class="story">{{ panel.text }}</div>
+    {% if panel.image_prompt %}<div class="prompt-ref"><strong>Image prompt:</strong> {{ panel.image_prompt }}</div>{% endif %}
+  </div>
+  {% endfor %}
+
+  <div class="actions">
+    <!-- The browser downloads the PDF, then we move to the success page. -->
+    <a class="btn" id="download-btn" href="{{ pdf_path }}" download>📥 Download Your Comic as PDF</a>
+    <a class="btn secondary" href="/">↩ New Comic</a>
+  </div>
+
+  <script>
+    document.getElementById("download-btn").addEventListener("click", function () {
+      var pdf = this.getAttribute("href");
+      setTimeout(function () {
+        window.location.href = "/export-success?pdf_path=" + encodeURIComponent(pdf);
+      }, 1200);
+    });
+  </script>
+</body>
+</html>
